@@ -156,5 +156,9 @@
                 });
         });
     </script>
+    <script>
+    // Fuerza al navegador a no autocompletar el campo de contraseña
+    document.querySelector('input[type="password"]').setAttribute('autocomplete', 'new-password');
+    </script>
 </body>
   </html>
